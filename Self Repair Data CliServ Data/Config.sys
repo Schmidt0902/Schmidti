@@ -1,0 +1,26 @@
+// Config.h
+#ifdef CONFIG_EXPORTS
+#define CONFIG_API __declspec(dllexport)
+#else
+#define CONFIG_API __declspec(dllimport)
+#endif
+
+#include <string>
+
+extern "C" {
+    CONFIG_API std::string readConfig(const std::string& filename);
+}
+
+// Config.cpp
+#include "Config.h"
+#include <fstream>
+#include <sstream>
+
+extern "C" {
+    CONFIG_API std::string readConfig(const std::string& filename) {
+        std::ifstream file(filename);
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        return buffer.str();
+    }
+}
